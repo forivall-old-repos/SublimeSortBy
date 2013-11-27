@@ -1,4 +1,4 @@
-import sublime, sublime_plugin, string, re
+import sublime, sublime_plugin, re
 
 bases = {'binary' : 2,'octal' : 8,'decimal' : 10, 'hexadecimal' : 16};
 
@@ -85,7 +85,26 @@ class SrtbyliCommand(sublime_plugin.TextCommand):
 		else:
 			print("SortBy error: No string found !");
 
-	def run(self, edit, sort = 'length', reversed=False):
+	def sortReverse(self, edit, region, contenue, estSelect):
+
+		if contenue[-1][-1] != '\n':
+			contenue[-1] += '\n'
+
+		conteneur = list(reversed(contenue))
+
+		if len(conteneur) != 0:
+			conteneur[-1] = conteneur[-1][:-1]
+			chaineFinale = ''.join(conteneur)
+
+			if estSelect:
+				self.view.replace(edit, region, chaineFinale)
+			else:
+				self.view.erase(edit, sublime.Region(0, self.view.size()))
+				self.view.insert(edit, 0, chaineFinale)
+		else:
+			print("SortBy error: No string found !")
+
+	def run(self, edit, sort='length', reversed=False):
 		view = self.view;
 		lines = [];
 		
@@ -96,6 +115,8 @@ class SrtbyliCommand(sublime_plugin.TextCommand):
 				self.sortStrings(edit, view.sel()[-1].end(), lines, sort, False, reversed);
 			elif sort == 'decimal' or sort == 'octal' or sort == 'hexadecimal' or sort == 'binary':
 				self.sortNumbers(edit, view.sel()[-1].end(), lines, sort, False, reversed);
+			elif reversed:
+				self.sortReverse(edit, view.sel()[-1].end(), lines, False)
 		else:
 			for region in view.sel():
 				lines = view.substr(region).splitlines(True);
@@ -107,3 +128,5 @@ class SrtbyliCommand(sublime_plugin.TextCommand):
 						self.sortStrings(edit, region, lines, sort, True, reversed);
 					elif sort == 'decimal' or sort == 'octal' or sort == 'hexadecimal' or sort == 'binary':
 						self.sortNumbers(edit, region, lines, sort, True, reversed);
+					elif reversed:
+						self.sortReverse(edit, region, lines, True)

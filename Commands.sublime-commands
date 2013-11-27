@@ -63,5 +63,10 @@
         "caption": "SortBy: Binary (Descending)",
         "command": "srtbyli",
         "args": {"sort": "binary","reversed": true}
+    },
+    {
+        "caption": "SortBy: reversed",
+        "command": "srtbyli",
+        "args": {"sort": "none","reversed": true}
     }
 ]
