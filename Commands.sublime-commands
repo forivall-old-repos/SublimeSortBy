@@ -65,7 +65,7 @@
         "args": {"sort": "binary","reversed": true}
     },
     {
-        "caption": "SortBy: reversed",
+        "caption": "SortBy: Reverse Lines",
         "command": "srtbyli",
         "args": {"sort": "none","reversed": true}
     }
